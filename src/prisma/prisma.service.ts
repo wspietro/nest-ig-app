@@ -14,3 +14,11 @@ export class PrismaService
     })
   }
 
+  onModuleInit() {
+    return this.$connect()
+  }
+
+  onModuleDestroy() {
+    return this.$disconnect()
+  }
+}
