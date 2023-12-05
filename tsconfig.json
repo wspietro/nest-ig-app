@@ -6,7 +6,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
+    "target": "es2022",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
@@ -17,11 +17,15 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
     "paths": {
       // alias e o caminho correspondente. Ao encontrar no código um import que comece @/, o typescript deve procurar no diretório src o *. 
       "@/*": [
         "./src/*"
       ]
     },
+    "types": [
+      "vitest/globals"
+    ]
   }
 }
