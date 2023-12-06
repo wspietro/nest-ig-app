@@ -29,6 +29,7 @@ function generateUniqueDatabaseURl(schemaID: string) {
 
 const schemaId = randomUUID()
 
+// obs: all não each
 beforeAll(() => {
   const databaseUrl = generateUniqueDatabaseURl(schemaId)
 
