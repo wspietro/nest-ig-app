@@ -23,23 +23,60 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
     return PrismaQuestionMapper.toDoamin(question)
   }
 
-  findBySlug(slug: string): Promise<Question | null> {
-    throw new Error('Method not implemented.')
+  async findBySlug(slug: string): Promise<Question | null> {
+    const question = await this.prisma.question.findUnique({
+      where: {
+        slug,
+      },
+    })
+
+    if (!question) {
+      return null
+    }
+
+    return PrismaQuestionMapper.toDoamin(question)
   }
 
-  findManyRecent(params: PaginationParams): Promise<Question[]> {
-    throw new Error('Method not implemented.')
+  async findManyRecent({ page }: PaginationParams): Promise<Question[]> {
+    const RECORDS_PER_PAGE = 20
+
+    const questions = await this.prisma.question.findMany({
+      skip: (page - 1) * RECORDS_PER_PAGE,
+      take: RECORDS_PER_PAGE,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+
+    return questions.map(PrismaQuestionMapper.toDoamin)
   }
 
-  create(question: Question): Promise<void> {
-    throw new Error('Method not implemented.')
+  async create(question: Question): Promise<void> {
+    const data = PrismaQuestionMapper.toPrisma(question)
+
+    await this.prisma.question.create({
+      data,
+    })
   }
 
-  save(question: Question): Promise<void> {
-    throw new Error('Method not implemented.')
+  async save(question: Question): Promise<void> {
+    const data = PrismaQuestionMapper.toPrisma(question)
+
+    await this.prisma.question.update({
+      where: {
+        id: data.id,
+      },
+      data,
+    })
   }
 
-  delete(question: Question): Promise<void> {
-    throw new Error('Method not implemented.')
+  async delete(question: Question): Promise<void> {
+    const data = PrismaQuestionMapper.toPrisma(question)
+
+    await this.prisma.question.delete({
+      where: {
+        id: data.id,
+      },
+    })
   }
 }
