@@ -40,5 +40,5 @@ export class PrismaQuestionMapper {
 }
 
 // undefined vs null
-// undeined: valor nao existe
+// undefined: valor nao existe
 // null: valor não preenchido
