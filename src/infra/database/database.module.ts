@@ -6,10 +6,15 @@ import { PrismaAnswersRepository } from './prisma/repositories/prisma-answers-re
 import { PrismaQuestionAttachmentsRepository } from './prisma/repositories/prisma-question-attachments-repository'
 import { PrismaQuestionCommentsRepository } from './prisma/repositories/prisma-question-comments-repository'
 import { PrismaQuestionsRepository } from './prisma/repositories/prisma-questions-repository'
+import { QuestionsRepository } from '@/domain/forum/application/repositories/questions-repository'
 
 @Module({
   providers: [
     PrismaService,
+    {
+      provide: QuestionsRepository,
+      useClass: PrismaQuestionsRepository,
+    }, // toda vez que o nest encontrar algum arquivo que está solicitando (dependência) o QuestionsRepository, use a classe PrismaQuestionsRepository
     PrismaQuestionsRepository,
     PrismaQuestionCommentsRepository,
     PrismaQuestionAttachmentsRepository,
@@ -19,7 +24,7 @@ import { PrismaQuestionsRepository } from './prisma/repositories/prisma-question
   ],
   exports: [
     PrismaService,
-    PrismaQuestionsRepository,
+    QuestionsRepository,
     PrismaQuestionCommentsRepository,
     PrismaQuestionAttachmentsRepository,
     PrismaAnswersRepository,
@@ -28,3 +33,5 @@ import { PrismaQuestionsRepository } from './prisma/repositories/prisma-question
   ], // todo módulo que importar o DatabaseModule também vai ter acesso ao PrismaService
 })
 export class DatabaseModule {}
+
+// falta 2m17s
