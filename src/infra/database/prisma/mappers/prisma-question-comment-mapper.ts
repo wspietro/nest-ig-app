@@ -3,7 +3,7 @@ import { QuestionComment } from '@/domain/forum/enterprise/entities/question-com
 import { Comment as PrismaComment, Prisma } from '@prisma/client'
 
 export class PrismaQuestionCommentMapper {
-  static toDoamin(raw: PrismaComment): QuestionComment {
+  static toDomain(raw: PrismaComment): QuestionComment {
     if (!raw.questionId) {
       throw new Error('Invalid comment type.')
     }

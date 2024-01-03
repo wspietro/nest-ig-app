@@ -7,7 +7,7 @@ import { Answer } from '@/domain/forum/enterprise/entities/answer'
 import { Answer as PrismaAnswer, Prisma } from '@prisma/client'
 
 export class PrismaAnswerMapper {
-  static toDoamin(raw: PrismaAnswer): Answer {
+  static toDomain(raw: PrismaAnswer): Answer {
     return Answer.create(
       {
         content: raw.content,

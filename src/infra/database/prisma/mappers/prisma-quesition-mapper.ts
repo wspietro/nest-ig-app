@@ -8,7 +8,7 @@ import { Slug } from '@/domain/forum/enterprise/entities/value-objects/slug'
 import { Question as PrismaQuestion, Prisma } from '@prisma/client'
 
 export class PrismaQuestionMapper {
-  static toDoamin(raw: PrismaQuestion): Question {
+  static toDomain(raw: PrismaQuestion): Question {
     return Question.create(
       {
         title: raw.title,

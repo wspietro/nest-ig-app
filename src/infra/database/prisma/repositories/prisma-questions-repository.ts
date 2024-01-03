@@ -20,7 +20,7 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
       return null
     }
 
-    return PrismaQuestionMapper.toDoamin(question)
+    return PrismaQuestionMapper.toDomain(question)
   }
 
   async findBySlug(slug: string): Promise<Question | null> {
@@ -34,7 +34,7 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
       return null
     }
 
-    return PrismaQuestionMapper.toDoamin(question)
+    return PrismaQuestionMapper.toDomain(question)
   }
 
   async findManyRecent({ page }: PaginationParams): Promise<Question[]> {
@@ -48,7 +48,7 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
       },
     })
 
-    return questions.map(PrismaQuestionMapper.toDoamin)
+    return questions.map(PrismaQuestionMapper.toDomain)
   }
 
   async create(question: Question): Promise<void> {
