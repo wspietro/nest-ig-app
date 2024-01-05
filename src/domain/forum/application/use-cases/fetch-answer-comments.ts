@@ -1,6 +1,6 @@
+import { AnswerComment } from '@/domain/forum/enterprise/entities/answer-comment'
+import { AnswerCommentsRepository } from '@/domain/forum/application/repositories/answer-comments-repository'
 import { Either, right } from '@/core/either'
-import { AnswerComment } from '../../enterprise/entities/answer-comment'
-import { AnswerCommentRepository } from '../repositories/answer-comments-repository'
 
 interface FetchAnswerCommentsUseCaseRequest {
   answerId: string
@@ -9,18 +9,20 @@ interface FetchAnswerCommentsUseCaseRequest {
 
 type FetchAnswerCommentsUseCaseResponse = Either<
   null,
-  { answerComments: AnswerComment[] }
+  {
+    answerComments: AnswerComment[]
+  }
 >
 
 export class FetchAnswerCommentsUseCase {
-  constructor(private questionCommentsRepository: AnswerCommentRepository) {}
+  constructor(private answerCommentsRepository: AnswerCommentsRepository) {}
 
   async execute({
     answerId,
     page,
   }: FetchAnswerCommentsUseCaseRequest): Promise<FetchAnswerCommentsUseCaseResponse> {
     const answerComments =
-      await this.questionCommentsRepository.findManyByQuestionId(answerId, {
+      await this.answerCommentsRepository.findManyByAnswerId(answerId, {
         page,
       })
 
