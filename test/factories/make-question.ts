@@ -15,8 +15,8 @@ export function makeQuestion(
 ) {
   const question = Question.create(
     {
-      title: faker.lorem.sentence(),
       authorId: new UniqueEntityId(),
+      title: faker.lorem.sentence(),
       content: faker.lorem.text(),
       ...override, // spread: In a situation where one key has another property, the last property overrides the first instance.
     },
