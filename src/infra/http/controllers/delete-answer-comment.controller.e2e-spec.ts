@@ -5,23 +5,30 @@ import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
 import request from 'supertest'
+import { AnswerFactory } from 'test/factories/make-answer'
+import { AnswerCommentFactory } from 'test/factories/make-answer-comment'
 import { QuestionFactory } from 'test/factories/make-question'
-import { QuestionCommentFactory } from 'test/factories/make-question-comment'
 import { StudentFactory } from 'test/factories/make-student'
 
-describe('Delete question comment (E2E)', () => {
+describe('Delete answer comment (E2E)', () => {
   let app: INestApplication
   let prisma: PrismaService
   let studentFactory: StudentFactory
   let questionFactory: QuestionFactory
-  let questionCommentFactory: QuestionCommentFactory
+  let answerFactory: AnswerFactory
+  let answerCommentFactory: AnswerCommentFactory
   let jwt: JwtService
 
   // subindo a aplicação de uma forma programática
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [StudentFactory, QuestionFactory, QuestionCommentFactory],
+      providers: [
+        StudentFactory,
+        QuestionFactory,
+        AnswerFactory,
+        AnswerCommentFactory,
+      ],
     }).compile()
 
     app = moduleRef.createNestApplication()
@@ -30,7 +37,8 @@ describe('Delete question comment (E2E)', () => {
     studentFactory = moduleRef.get(StudentFactory)
     jwt = moduleRef.get(JwtService)
     questionFactory = moduleRef.get(QuestionFactory)
-    questionCommentFactory = moduleRef.get(QuestionCommentFactory)
+    answerFactory = moduleRef.get(AnswerFactory)
+    answerCommentFactory = moduleRef.get(AnswerCommentFactory)
 
     await app.init()
   })
@@ -44,15 +52,20 @@ describe('Delete question comment (E2E)', () => {
       authorId: user.id,
     })
 
-    const comment = await questionCommentFactory.makePrismaQuestionComment({
+    const answer = await answerFactory.makePrismaAnswer({
       authorId: user.id,
       questionId: question.id,
+    })
+
+    const comment = await answerCommentFactory.makePrismaAnswerComment({
+      authorId: user.id,
+      answerId: answer.id,
     })
 
     const commentId = comment.id.toString()
 
     const response = await request(app.getHttpServer())
-      .delete(`/question/comments/${commentId}`)
+      .delete(`/answer/comments/${commentId}`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send()
 
