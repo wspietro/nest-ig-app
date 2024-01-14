@@ -5,13 +5,13 @@ import { Attachment } from '../../enterprise/entities/attachment'
 import { AttachmentsRepository } from '../repositories/attachments-repository'
 import { Uploader } from '../storage/uploader'
 
-interface UploadAndCreatAttachmentCaseRequest {
+interface UploadAndCreatAttachmentUseCaseRequest {
   fileName: string
   fileType: string
   body: Buffer
 }
 
-type UploadAndCreatAttachmentCaseResponse = Either<
+type UploadAndCreatAttachmentUseCaseResponse = Either<
   InvalidAttachmentTypeError,
   {
     attachment: Attachment
@@ -19,7 +19,7 @@ type UploadAndCreatAttachmentCaseResponse = Either<
 >
 
 @Injectable()
-export class UploadAndCreatAttachmentCase {
+export class UploadAndCreatAttachmentUseCase {
   constructor(
     private attachmentsRepository: AttachmentsRepository,
     private uploader: Uploader,
@@ -29,7 +29,7 @@ export class UploadAndCreatAttachmentCase {
     fileName,
     fileType,
     body,
-  }: UploadAndCreatAttachmentCaseRequest): Promise<UploadAndCreatAttachmentCaseResponse> {
+  }: UploadAndCreatAttachmentUseCaseRequest): Promise<UploadAndCreatAttachmentUseCaseResponse> {
     if (!/^(image\/(jpeg|png))$|^application\/pdf$/.test(fileType)) {
       // fileType comes as mimetype. This regex valid the types of files allowed
       return left(new InvalidAttachmentTypeError(fileType))
