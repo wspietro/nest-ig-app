@@ -39,5 +39,6 @@ data
 
 # env
 .env
+.env.test
 
 # teste de credencial
