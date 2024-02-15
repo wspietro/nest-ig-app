@@ -14,6 +14,7 @@ import { EditAnswerUseCase } from '@/domain/forum/application/use-cases/edit-ans
 
 const editAnswerBodySchema = z.object({
   content: z.string(),
+  attachments: z.array(z.string().uuid()).default([]),
 })
 
 const bodyValidationPipe = new ZodValidationPipe(editAnswerBodySchema)
@@ -27,24 +28,22 @@ export class EditAnswerController {
   @Put()
   @HttpCode(204)
   async handle(
-    @Body(bodyValidationPipe) body: EditAnswerBodySchema, // alternativa @UsePipes(new ZodValidationPipe(editAnswerBodySchema))
+    @Body(bodyValidationPipe) body: EditAnswerBodySchema,
     @CurrentUser() user: UserPayload,
     @Param('id') answerId: string,
   ) {
-    const { content } = body
+    const { content, attachments } = body
     const userId = user.sub
 
     const result = await this.editAnswer.execute({
       content,
-      authorId: userId,
-      attachmentsIds: [],
       answerId,
+      authorId: userId,
+      attachmentsIds: attachments,
     })
 
     if (result.isLeft()) {
       throw new BadRequestException()
     }
-    // não fazemos a tratativa como em authenticate pois não é tão comum cair nesse erro;
-    // fazemos tratativa dos erros esperados.
   }
 }

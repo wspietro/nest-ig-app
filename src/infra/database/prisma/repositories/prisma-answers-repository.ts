@@ -4,10 +4,14 @@ import { Answer } from '@/domain/forum/enterprise/entities/answer'
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
 import { PrismaAnswerMapper } from '../mappers/prisma-answert-mapper'
+import { AnswerAttachmentsRepository } from '@/domain/forum/application/repositories/answer-attachments-repository'
 
 @Injectable()
 export class PrismaAnswersRepository implements AnswersRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private answerAttachmentsRepository: AnswerAttachmentsRepository,
+  ) {}
 
   async findById(id: string): Promise<Answer | null> {
     const answer = await this.prisma.answer.findUnique({
@@ -27,8 +31,6 @@ export class PrismaAnswersRepository implements AnswersRepository {
     questionId: string,
     { page }: PaginationParams,
   ): Promise<Answer[]> {
-    const RECORDS_PER_PAGE = 20
-
     const answers = await this.prisma.answer.findMany({
       where: {
         questionId,
@@ -36,8 +38,8 @@ export class PrismaAnswersRepository implements AnswersRepository {
       orderBy: {
         createdAt: 'desc',
       },
-      take: RECORDS_PER_PAGE,
-      skip: (page - 1) * RECORDS_PER_PAGE,
+      take: 20,
+      skip: (page - 1) * 20,
     })
 
     return answers.map(PrismaAnswerMapper.toDomain)
@@ -49,17 +51,29 @@ export class PrismaAnswersRepository implements AnswersRepository {
     await this.prisma.answer.create({
       data,
     })
+
+    await this.answerAttachmentsRepository.createMany(
+      answer.attachments.getItems(),
+    )
   }
 
   async save(answer: Answer): Promise<void> {
     const data = PrismaAnswerMapper.toPrisma(answer)
 
-    await this.prisma.answer.update({
-      where: {
-        id: data.id,
-      },
-      data,
-    })
+    await Promise.all([
+      this.prisma.answer.update({
+        where: {
+          id: answer.id.toString(),
+        },
+        data,
+      }),
+      this.answerAttachmentsRepository.createMany(
+        answer.attachments.getNewItems(),
+      ),
+      this.answerAttachmentsRepository.deleteMany(
+        answer.attachments.getRemovedItems(),
+      ),
+    ])
   }
 
   async delete(answer: Answer): Promise<void> {
