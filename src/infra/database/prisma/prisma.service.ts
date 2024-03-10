@@ -4,8 +4,7 @@ import { PrismaClient } from '@prisma/client'
 @Injectable()
 export class PrismaService
   extends PrismaClient
-  implements OnModuleInit, OnModuleDestroy
-{
+  implements OnModuleInit, OnModuleDestroy {
   constructor() {
     super({
       log: ['query', 'warn', 'error'],
@@ -16,6 +15,7 @@ export class PrismaService
     return this.$connect()
   }
 
+  // função chamada automaticamente pelo nest quando a aplicação for derrubada
   onModuleDestroy() {
     return this.$disconnect()
   }
