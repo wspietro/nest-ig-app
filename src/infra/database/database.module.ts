@@ -16,8 +16,8 @@ import { QuestionAttachmentsRepository } from '@/domain/forum/application/reposi
 import { QuestionCommentsRepository } from '@/domain/forum/application/repositories/question-comments-repository'
 import { AttachmentsRepository } from '@/domain/forum/application/repositories/attachments-repository'
 import { PrismaAttachmentsRepository } from './prisma/repositories/prisma-attachments-repository'
-import { NotificationsRepository } from '@/domain/notification/application/repositories/notifications-repository'
 import { PrismaNotificationsReoisitory } from './prisma/repositories/prisma-notifications-repository'
+import { NotificationsRepository } from '@/domain/notification/application/repositories/notifications-repository'
 import { CacheModule } from '../cache/cache.module'
 
 @Module({
@@ -27,7 +27,7 @@ import { CacheModule } from '../cache/cache.module'
     {
       provide: QuestionsRepository,
       useClass: PrismaQuestionsRepository,
-    }, // toda vez que o nest encontrar algum arquivo que está solicitando (dependência) o QuestionsRepository, use a classe PrismaQuestionsRepository
+    },
     {
       provide: StudentsRepository,
       useClass: PrismaStudentsRepository,
@@ -72,8 +72,6 @@ import { CacheModule } from '../cache/cache.module'
     AnswerAttachmentsRepository,
     AttachmentsRepository,
     NotificationsRepository,
-  ], // todo módulo que importar o DatabaseModule também vai ter acesso ao PrismaService
+  ],
 })
 export class DatabaseModule {}
-
-// falta 2m17s
