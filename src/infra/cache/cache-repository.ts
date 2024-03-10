@@ -3,7 +3,7 @@ export abstract class CacheRepository {
   abstract set(key: string, value: string): Promise<void>
 
   // buscar no cache
-  abstract get(key: string): Promise<void>
+  abstract get(key: string): Promise<string | null>
 
   // deletar no cache (invalidar dados)
   abstract delete(key: string): Promise<void>
